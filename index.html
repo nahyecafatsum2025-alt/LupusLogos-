@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LupusLogos — Felse44fe Kulübü</title>
+    <title>LupusLogos — Felsefe Kulübü</title>
     <!-- Google Fonts: Cormorant Garamond & Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -55,49 +55,108 @@
             -webkit-font-smoothing: antialiased;
             background-image: radial-gradient(#e5dec9 0.75px, transparent 0.75px);
             background-size: 24px 24px;
+            overflow-x: hidden;
         }
 
+        /* Sekme Panel Geçişleri */
         .tab-panel {
-            opacity: 0;
-            transform: translateY(8px);
-            transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
             display: none;
+            opacity: 0;
         }
 
         .tab-panel.active {
             display: block;
             opacity: 1;
-            transform: translateY(0);
         }
 
+        /* Kademeli Giriş Animasyonu */
+        @keyframes subtleFadeUp {
+            0% {
+                opacity: 0;
+                transform: translateY(14px) scale(0.995);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .tab-panel.active .anim-item {
+            opacity: 0;
+            animation: subtleFadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .tab-panel.active .delay-1 { animation-delay: 0.05s; }
+        .tab-panel.active .delay-2 { animation-delay: 0.12s; }
+        .tab-panel.active .delay-3 { animation-delay: 0.18s; }
+        .tab-panel.active .delay-4 { animation-delay: 0.25s; }
+
+        /* Buton ve Kart Mikro Etkileşimleri */
         .interactive-btn {
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         .interactive-btn:active {
-            transform: scale(0.97);
+            transform: scale(0.96);
+        }
+
+        .card-hover-effect {
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease;
+            will-change: transform, box-shadow;
+        }
+
+        .card-hover-effect:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 28px -8px rgba(40, 36, 33, 0.09);
         }
 
         .photo-card img {
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .photo-card:hover img {
-            transform: scale(1.04);
+            transform: scale(1.06);
+        }
+
+        /* Arka Plan Yumuşak Ambiyans Nefesi */
+        @keyframes ambientPulse {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.45; }
+            50% { transform: translate(15px, -15px) scale(1.08); opacity: 0.65; }
+        }
+
+        .ambient-glow-1 {
+            animation: ambientPulse 14s ease-in-out infinite alternate;
+        }
+        .ambient-glow-2 {
+            animation: ambientPulse 18s ease-in-out infinite alternate-reverse;
+        }
+
+        /* Modal Giriş Efekti */
+        @keyframes modalPop {
+            0% { opacity: 0; transform: scale(0.94) translateY(12px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .modal-animated {
+            animation: modalPop 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         #toast {
-            transition: transform 0.35s ease, opacity 0.35s ease;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between selection:bg-terracotta-100 selection:text-terracotta-600">
+<body class="min-h-screen flex flex-col justify-between selection:bg-terracotta-100 selection:text-terracotta-600 relative">
+
+    <!-- Arka Plan Organik Ambiyans Işıkları -->
+    <div class="fixed top-[-10vw] left-[-10vw] w-[35vw] h-[35vw] rounded-full bg-sage-500/10 blur-3xl pointer-events-none ambient-glow-1 -z-10"></div>
+    <div class="fixed bottom-[-10vw] right-[-10vw] w-[40vw] h-[40vw] rounded-full bg-terracotta-500/10 blur-3xl pointer-events-none ambient-glow-2 -z-10"></div>
 
     <!-- Üst Bar / Başlık ve Navigasyon -->
-    <header class="border-b border-parchment-border/80 sticky top-0 bg-[#F4EFE6]/92 backdrop-blur-md z-40 transition-colors">
+    <header class="border-b border-parchment-border/80 sticky top-0 bg-[#F4EFE6]/90 backdrop-blur-md z-40 transition-colors">
         <div class="max-w-5xl mx-auto px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
             <!-- Logo -->
             <a href="javascript:void(0)" onclick="switchTab('biz-kimiz')" class="group flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-full bg-sage-500/15 text-sage-600 flex items-center justify-center font-serif text-lg font-bold border border-sage-500/30 group-hover:bg-sage-500 group-hover:text-white transition-all duration-300">
+                <div class="w-8 h-8 rounded-full bg-sage-500/15 text-sage-600 flex items-center justify-center font-serif text-lg font-bold border border-sage-500/30 group-hover:bg-sage-500 group-hover:text-white transition-all duration-300 group-hover:rotate-6">
                     L
                 </div>
                 <div class="flex items-baseline gap-2">
@@ -117,6 +176,9 @@
                 </button>
                 <button onclick="switchTab('program')" id="btn-program" class="nav-btn px-3.5 py-1.5 rounded-full interactive-btn hover:text-charcoal hover:bg-parchment-card transition border border-transparent">
                     Gelecek Program
+                </button>
+                <button onclick="switchTab('sozluk')" id="btn-sozluk" class="nav-btn px-3.5 py-1.5 rounded-full interactive-btn hover:text-charcoal hover:bg-parchment-card transition border border-transparent">
+                    Sözlük
                 </button>
                 <button onclick="switchTab('gecmis')" id="btn-gecmis" class="nav-btn px-3.5 py-1.5 rounded-full interactive-btn hover:text-charcoal hover:bg-parchment-card transition border border-transparent">
                     Geçmiş Etkinlikler
@@ -139,9 +201,9 @@
         <!-- 1. BİZ KİMİZ -->
         <section id="biz-kimiz" class="tab-panel active">
             <div class="space-y-8">
-                <div class="border-b border-parchment-border pb-6">
+                <div class="border-b border-parchment-border pb-6 anim-item delay-1">
                     <span class="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest text-terracotta-500 font-semibold px-2.5 py-1 rounded-full bg-terracotta-50 border border-terracotta-100">
-                        <span class="w-1.5 h-1.5 rounded-full bg-terracotta-500"></span>
+                        <span class="w-1.5 h-1.5 rounded-full bg-terracotta-500 animate-ping"></span>
                         Manifestomuz
                     </span>
                     <h1 class="font-serif text-4xl sm:text-5xl mt-3 text-charcoal font-normal leading-tight">
@@ -149,13 +211,13 @@
                     </h1>
                 </div>
 
-                <div class="grid md:grid-cols-2 gap-8 text-charcoal/80 leading-relaxed font-light text-base sm:text-lg">
-                    <div class="p-6 rounded-2xl bg-parchment-card/80 border border-parchment-border shadow-sm">
+                <div class="grid md:grid-cols-2 gap-8 text-charcoal/80 leading-relaxed font-light text-base sm:text-lg anim-item delay-2">
+                    <div class="p-6 rounded-2xl bg-parchment-card/80 border border-parchment-border shadow-sm card-hover-effect">
                         <p>
                             <strong class="font-medium text-charcoal text-sage-600">LupusLogos</strong>, dogmalardan uzak, düşünceyi ve diyalektiği bir yaşam biçimi olarak gören bireylerin bir araya geldiği bağımsız bir düşünce alanıdır. Amacımız kesin yanıtlar üretmek değil; doğru ve derinlikli sorular sormayı öğrenmektir.
                         </p>
                     </div>
-                    <div class="p-6 rounded-2xl bg-parchment-card/80 border border-parchment-border shadow-sm">
+                    <div class="p-6 rounded-2xl bg-parchment-card/80 border border-parchment-border shadow-sm card-hover-effect">
                         <p>
                             Antik Stoacılıktan varoluşçuluğa, zihin felsefesinden modern etik ikilemlere kadar her iki haftada bir sıcak bir çay veya kütüphane sessizliğinde buluşuyor, fikirlerimizi nezaket ve akıl süzgecinde çarpıştırıyoruz.
                         </p>
@@ -163,18 +225,18 @@
                 </div>
 
                 <!-- Kulüp İlkeleri -->
-                <div class="grid sm:grid-cols-3 gap-4 pt-2">
-                    <div class="p-5 rounded-2xl bg-sage-50/70 border border-sage-100/80 hover:border-sage-500/30 transition shadow-sm">
+                <div class="grid sm:grid-cols-3 gap-4 pt-2 anim-item delay-3">
+                    <div class="p-5 rounded-2xl bg-sage-50/70 border border-sage-100/80 hover:border-sage-500/40 transition shadow-sm card-hover-effect">
                         <span class="text-xs font-semibold uppercase tracking-wider text-sage-600 block mb-1">İlke 01</span>
                         <div class="font-serif text-2xl text-charcoal mb-1">Parrhesia</div>
                         <p class="text-xs text-charcoal/70 leading-normal">Cesurca ve dürüstçe konuşma; önyargılardan arınmış samimi ve doğrudan fikir alışverişi.</p>
                     </div>
-                    <div class="p-5 rounded-2xl bg-terracotta-50/70 border border-terracotta-100/80 hover:border-terracotta-500/30 transition shadow-sm">
+                    <div class="p-5 rounded-2xl bg-terracotta-50/70 border border-terracotta-100/80 hover:border-terracotta-500/40 transition shadow-sm card-hover-effect">
                         <span class="text-xs font-semibold uppercase tracking-wider text-terracotta-600 block mb-1">İlke 02</span>
                         <div class="font-serif text-2xl text-charcoal mb-1">Epokhe</div>
                         <p class="text-xs text-charcoal/70 leading-normal">Hükmü askıya alma yetisi; peşin yargıya varmadan önce diğer bakış açılarına zihinsel alan açmak.</p>
                     </div>
-                    <div class="p-5 rounded-2xl bg-clay-50/90 border border-parchment-border hover:border-clay-500/40 transition shadow-sm">
+                    <div class="p-5 rounded-2xl bg-clay-50/90 border border-parchment-border hover:border-clay-500/50 transition shadow-sm card-hover-effect">
                         <span class="text-xs font-semibold uppercase tracking-wider text-clay-500 block mb-1">İlke 03</span>
                         <div class="font-serif text-2xl text-charcoal mb-1">Diyalog</div>
                         <p class="text-xs text-charcoal/70 leading-normal">Kazanma kaygısı taşımayan, düşünceyi birlikte doğurmayı (maiotik) amaçlayan derin sohbet.</p>
@@ -185,13 +247,13 @@
 
         <!-- 2. GELECEK PROGRAM -->
         <section id="program" class="tab-panel">
-            <div class="border-b border-parchment-border pb-4 mb-8">
+            <div class="border-b border-parchment-border pb-4 mb-8 anim-item delay-1">
                 <span class="text-xs uppercase tracking-widest text-sage-600 font-semibold px-2.5 py-1 rounded-full bg-sage-100 inline-block">Gündem</span>
                 <h2 class="font-serif text-3xl sm:text-4xl text-charcoal font-normal mt-2">Gelecek Buluşmalar</h2>
             </div>
 
-            <div class="space-y-4">
-                <div class="p-6 rounded-2xl bg-parchment-card border border-parchment-border hover:border-terracotta-500/40 transition shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="space-y-4 anim-item delay-2">
+                <div class="p-6 rounded-2xl bg-parchment-card border border-parchment-border hover:border-terracotta-500/40 transition shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 card-hover-effect">
                     <div class="space-y-1.5">
                         <span class="text-xs font-semibold px-3 py-1 rounded-full bg-terracotta-100 text-terracotta-600 inline-block">Kitap Kulübü</span>
                         <h3 class="font-serif text-2xl text-charcoal pt-1">Albert Camus & Yabancılaşma</h3>
@@ -205,7 +267,7 @@
                     </div>
                 </div>
 
-                <div class="p-6 rounded-2xl bg-parchment-card border border-parchment-border hover:border-sage-500/40 transition shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div class="p-6 rounded-2xl bg-parchment-card border border-parchment-border hover:border-sage-500/40 transition shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 card-hover-effect">
                     <div class="space-y-1.5">
                         <span class="text-xs font-semibold px-3 py-1 rounded-full bg-sage-100 text-sage-600 inline-block">Açık Tartışma</span>
                         <h3 class="font-serif text-2xl text-charcoal pt-1">Yapay Zeka Çağında Zihin ve Bilinç</h3>
@@ -221,15 +283,215 @@
             </div>
         </section>
 
-        <!-- 3. GEÇMİŞ ETKİNLİKLER -->
+        <!-- 3. FELSEFE SÖZLÜĞÜ -->
+        <section id="sozluk" class="tab-panel">
+            <div class="border-b border-parchment-border pb-6 mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4 anim-item delay-1">
+                <div>
+                    <span class="text-xs uppercase tracking-widest text-terracotta-500 font-semibold px-2.5 py-1 rounded-full bg-terracotta-50 inline-block">Terminoloji</span>
+                    <h2 class="font-serif text-3xl sm:text-4xl text-charcoal font-normal mt-2">Kavram Sözlüğü</h2>
+                    <p class="text-sm text-charcoal/70 font-light mt-1 max-w-xl">
+                        Tartışmalarımızda ve metin okumalarımızda sıklıkla başvurduğumuz 15 temel felsefi kavramın tahlili.
+                    </p>
+                </div>
+                <!-- Arama Kutusu -->
+                <div class="w-full sm:w-64">
+                    <input type="text" id="sozlukSearch" onkeyup="filterGlossary()" placeholder="Kavram veya metin ara..." 
+                           class="w-full px-4 py-2 rounded-xl bg-parchment-card border border-parchment-border text-xs text-charcoal placeholder-charcoal/40 focus:outline-none focus:ring-2 focus:ring-terracotta-500/30 focus:border-terracotta-500 transition card-hover-effect">
+                </div>
+            </div>
+
+            <div id="glossaryList" class="grid sm:grid-cols-2 gap-5 anim-item delay-2">
+                <!-- 1. Amor Fati -->
+                <article class="glossary-item p-6 rounded-2xl bg-parchment-card border border-parchment-border hover:border-terracotta-500/40 transition shadow-sm space-y-2 card-hover-effect">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-serif text-2xl text-charcoal font-semibold">Amor Fati</h3>
+                        <span class="text-xs font-sans uppercase tracking-wider text-terracotta-600 bg-terracotta-50 px-2 py-0.5 rounded border border-terracotta-100">Etik / Varoluş</span>
+                    </div>
+                    <p class="text-xs text-charcoal/50 italic">Latince: Kader Sevgisi • Nietzsche, Stoacılık</p>
+                    <p class="text-sm text-charcoal/80 font-light leading-relaxed pt-1">
+                        Kişinin başına gelen hiçbir şeyin farklı olmasını arzu etmemesi; ne geçmişte, ne gelecekte, ne de sonsuzlukta. Yalnızca zorunluluğa tahammül etmekle kalmayıp onu bütünüyle kucaklayarak yaşamın tüm acı ve çelişkilerini varoluşun kurucu unsuru saymaktır.
+                    </p>
+                </article>
+
+                <!-- 2. Transandantal -->
+                <article class="glossary-item p-6 rounded-2xl bg-parchment-card border border-parchment-border hover:border-sage-500/40 transition shadow-sm space-y-2 card-hover-effect">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-serif text-2xl text-charcoal font-semibold">Transandantal</h3>
+                        <span class="text-xs font-sans uppercase tracking-wider text-sage-600 bg-sage-50 px-2 py-0.5 rounded border border-sage-100">Epistemoloji</span>
+                    </div>
+                    <p class="text-xs text-charcoal/50 italic">Kant Felsefesi • Transzendental</p>
+                    <p class="text-sm text-charcoal/80 font-light leading-relaxed pt-1">
+                        Nesnelerin kendileriyle değil, nesneleri bilme tarzımızın ve deneyimin a priori (deney-öncesi) olanaklılık koşullarıyla ilgilenen bilgi türü. Aşkın (transandant) olanla karıştırılmamalıdır; zihnin deneyimi mümkün kılan formel yapısını ifade eder.
+                    </p>
+                </article>
+
+                <!-- 3. Deneycilik (Empirizm) -->
+                <article class="glossary-item p-6 rounded-2xl bg-parchment-card border border-parchment-border hover:border-clay-500/40 transition shadow-sm space-y-2 card-hover-effect">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-serif text-2xl text-charcoal font-semibold">Deneycilik (Empirizm)</h3>
+                        <span class="text-xs font-sans uppercase tracking-wider text-clay-500 bg-clay-50 px-2 py-0.5 rounded border border-parchment-border">Epistemoloji</span>
+                    </div>
+                    <p class="text-xs text-charcoal/50 italic">Locke, Berkeley, Hume • Empiricism</p>
+                    <p class="text-sm text-charcoal/80 font-light leading-relaxed pt-1">
+                        Bütün bilgilerin kökeninde duyu deneyimini (sensory experience) gören epistemolojik akım. Zihinde doğuştan gelen (innate) idelerin varlığını reddeder; bilginin ancak duyumlar ve bu duyumlar üzerindeki algısal reflekslerle inşa edilebileceğini savunur.
+                    </p>
+                </article>
+
+                <!-- 4. Epokhe -->
+                <article class="glossary-item p-6 rounded-2xl bg-parchment-card border border-parchment-border hover:border-terracotta-500/40 transition shadow-sm space-y-2 card-hover-effect">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-serif text-2xl text-charcoal font-semibold">Epokhe</h3>
+                        <span class="text-xs font-sans uppercase tracking-wider text-terracotta-600 bg-terracotta-50 px-2 py-0.5 rounded border border-terracotta-100">Fenomenoloji</span>
+                    </div>
+                    <p class="text-xs text-charcoal/50 italic">Grekçe: Askıya Alma • Pyrrhon, Husserl</p>
+                    <p class="text-sm text-charcoal/80 font-light leading-relaxed pt-1">
+                        Dış dünyanın varlığına veya kesinliğine dair yargıyı askıya alma hali. Husserl fenomenolojisinde 'paranteze alma' olarak kavramsallaştırılmış; bilincin nesneleri yönelimsel (intentional) olarak saf özleri içinde kavramasının ilk yöntemsel adımı kılınmıştır.
+                    </p>
+                </article>
+
+                <!-- 5. Parrhesia -->
+                <article class="glossary-item p-6 rounded-2xl bg-parchment-card border border-parchment-border hover:border-sage-500/40 transition shadow-sm space-y-2 card-hover-effect">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-serif text-2xl text-charcoal font-semibold">Parrhesia</h3>
+                        <span class="text-xs font-sans uppercase tracking-wider text-sage-600 bg-sage-50 px-2 py-0.5 rounded border border-sage-100">Etik / Politika</span>
+                    </div>
+                    <p class="text-xs text-charcoal/50 italic">Grekçe: Açık Sözlülük • Sokrates, Foucault</p>
+                    <p class="text-sm text-charcoal/80 font-light leading-relaxed pt-1">
+                        Kişinin hakikati bildiği şekliyle, herhangi bir gizleme veya retorik süslemeye başvurmadan, güç odaklarına karşı tehlikeyi göze alarak açıkça ve cesaretle dile getirmesi. Konuşan ile hakikat arasındaki mutlak ahlaki bağı temsil eder.
+                    </p>
+                </article>
+
+                <!-- 6. Dasein -->
+                <article class="glossary-item p-6 rounded-2xl bg-parchment-card border border-parchment-border hover:border-clay-500/40 transition shadow-sm space-y-2 card-hover-effect">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-serif text-2xl text-charcoal font-semibold">Dasein</h3>
+                        <span class="text-xs font-sans uppercase tracking-wider text-clay-500 bg-clay-50 px-2 py-0.5 rounded border border-parchment-border">Ontoloji</span>
+                    </div>
+                    <p class="text-xs text-charcoal/50 italic">Almanca: Orada-Varlık • Martin Heidegger</p>
+                    <p class="text-sm text-charcoal/80 font-light leading-relaxed pt-1">
+                        Kendi varlığı kendisi için bir mesele olan, dünyada-var-olan (In-der-Welt-sein) insani varoluş formu. Heidegger'de insan soyut bir özne değil, zamanın ve sonluluğun içine fırlatılmış, ölüme-doğru-varlık olarak kendini anlayan varoluştur.
+                    </p>
+                </article>
+
+                <!-- 7. Deus Sive Natura -->
+                <article class="glossary-item p-6 rounded-2xl bg-parchment-card border border-parchment-border hover:border-terracotta-500/40 transition shadow-sm space-y-2 card-hover-effect">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-serif text-2xl text-charcoal font-semibold">Deus Sive Natura</h3>
+                        <span class="text-xs font-sans uppercase tracking-wider text-terracotta-600 bg-terracotta-50 px-2 py-0.5 rounded border border-terracotta-100">Metafizik</span>
+                    </div>
+                    <p class="text-xs text-charcoal/50 italic">Latince: Tanrı ya da Doğa • Baruch Spinoza</p>
+                    <p class="text-sm text-charcoal/80 font-light leading-relaxed pt-1">
+                        Evrende tek bir sonsuz tözün (substantia) var olduğunu savunan panteist/içkinci ilke. Tanrı evrenin dışındaki bir yaratıcı değil; bizzat var olan her şeyin içkin nedeni, sonsuz sıfatlarıyla kendini gösteren doğanın ta kendisidir.
+                    </p>
+                </article>
+
+                <!-- 8. Khaosmos -->
+                <article class="glossary-item p-6 rounded-2xl bg-parchment-card border border-parchment-border hover:border-sage-500/40 transition shadow-sm space-y-2 card-hover-effect">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-serif text-2xl text-charcoal font-semibold">Khaosmos</h3>
+                        <span class="text-xs font-sans uppercase tracking-wider text-sage-600 bg-sage-50 px-2 py-0.5 rounded border border-sage-100">Ontoloji</span>
+                    </div>
+                    <p class="text-xs text-charcoal/50 italic">Kaos & Kozmos • James Joyce, Gilles Deleuze</p>
+                    <p class="text-sm text-charcoal/80 font-light leading-relaxed pt-1">
+                        Kaos ile düzenin (kozmos) birbirini dışlayan zıtlıklar değil, sürekli iç içe geçen, birbirini üreten bir süreç olduğunu belirten kavram. Deleuzecü ontolojide dünya, durağan bir düzen değil; sürekli çatallanan, oluş halindeki çoğul bir kaotik düzendir.
+                    </p>
+                </article>
+
+                <!-- 9. Kategorik Buyruk -->
+                <article class="glossary-item p-6 rounded-2xl bg-parchment-card border border-parchment-border hover:border-clay-500/40 transition shadow-sm space-y-2 card-hover-effect">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-serif text-2xl text-charcoal font-semibold">Kategorik Buyruk</h3>
+                        <span class="text-xs font-sans uppercase tracking-wider text-clay-500 bg-clay-50 px-2 py-0.5 rounded border border-parchment-border">Ahlak Felsefesi</span>
+                    </div>
+                    <p class="text-xs text-charcoal/50 italic">Koşulsuz Buyruk • Immanuel Kant</p>
+                    <p class="text-sm text-charcoal/80 font-light leading-relaxed pt-1">
+                        Hiçbir koşula, arzuya ya da faydaya bağlı olmaksızın her akıl sahibi varlık için mutlak geçerli ahlak yasası: "Öyle hareket et ki, eyleminin ilkesi aynı zamanda genel bir yasa olabilsin." İnsanı asla bir araç değil, her zaman bir amaç olarak görmeyi buyurur.
+                    </p>
+                </article>
+
+                <!-- 10. Aporia -->
+                <article class="glossary-item p-6 rounded-2xl bg-parchment-card border border-parchment-border hover:border-terracotta-500/40 transition shadow-sm space-y-2 card-hover-effect">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-serif text-2xl text-charcoal font-semibold">Aporia</h3>
+                        <span class="text-xs font-sans uppercase tracking-wider text-terracotta-600 bg-terracotta-50 px-2 py-0.5 rounded border border-terracotta-100">Diyalektik</span>
+                    </div>
+                    <p class="text-xs text-charcoal/50 italic">Grekçe: Geçitsizlik / Çıkmaz • Platon, Derrida</p>
+                    <p class="text-sm text-charcoal/80 font-light leading-relaxed pt-1">
+                        Felsefi bir soruşturmada çelişkili veya eşit ağırlıkta geçerli görünen argümanlar nedeniyle zihnin tıkandığı, mantıksal çıkış yolunun bulunamadığı an. Felsefi şüphenin derinleştiği ve peşin kabullerin yıkıldığı en verimli felsefeleme eşiğidir.
+                    </p>
+                </article>
+
+                <!-- 11. Tabula Rasa -->
+                <article class="glossary-item p-6 rounded-2xl bg-parchment-card border border-parchment-border hover:border-sage-500/40 transition shadow-sm space-y-2 card-hover-effect">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-serif text-2xl text-charcoal font-semibold">Tabula Rasa</h3>
+                        <span class="text-xs font-sans uppercase tracking-wider text-sage-600 bg-sage-50 px-2 py-0.5 rounded border border-sage-100">Zihin Felsefesi</span>
+                    </div>
+                    <p class="text-xs text-charcoal/50 italic">Latince: Boş Levha • John Locke</p>
+                    <p class="text-sm text-charcoal/80 font-light leading-relaxed pt-1">
+                        İnsan zihninin doğuştan hiçbir bilgi veya idrak taşımadığını, üzerine deneyimlerin ve duyumların yazıldığı pürüzsüz boş bir balmumu levhaya benzediğini ileri süren kavram. Bilginin deneyimle inşa edildiği epistemolojinin temel metaforudur.
+                    </p>
+                </article>
+
+                <!-- 12. Bengi Dönüş -->
+                <article class="glossary-item p-6 rounded-2xl bg-parchment-card border border-parchment-border hover:border-clay-500/40 transition shadow-sm space-y-2 card-hover-effect">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-serif text-2xl text-charcoal font-semibold">Bengi Dönüş</h3>
+                        <span class="text-xs font-sans uppercase tracking-wider text-clay-500 bg-clay-50 px-2 py-0.5 rounded border border-parchment-border">Zaman / Varoluş</span>
+                    </div>
+                    <p class="text-xs text-charcoal/50 italic">Ewige Wiederkunft • Friedrich Nietzsche</p>
+                    <p class="text-sm text-charcoal/80 font-light leading-relaxed pt-1">
+                        Zamanın çizgisel değil döngüsel olduğunu; yaşanmış olan ve yaşanacak her anın sonsuz kez, aynı detay ve sıralamayla tekrar yaşanacağı düşünce deneyi. Kişinin hayatına "bunu sonsuz kez yeniden yaşamayı ister miyim?" sorusuyla mutlak sorumluluk yükler.
+                    </p>
+                </article>
+
+                <!-- 13. Yabancılaşma (Entfremdung) -->
+                <article class="glossary-item p-6 rounded-2xl bg-parchment-card border border-parchment-border hover:border-terracotta-500/40 transition shadow-sm space-y-2 card-hover-effect">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-serif text-2xl text-charcoal font-semibold">Yabancılaşma</h3>
+                        <span class="text-xs font-sans uppercase tracking-wider text-terracotta-600 bg-terracotta-50 px-2 py-0.5 rounded border border-terracotta-100">Toplum Felsefesi</span>
+                    </div>
+                    <p class="text-xs text-charcoal/50 italic">Entfremdung / Alienation • Hegel, Karl Marx</p>
+                    <p class="text-sm text-charcoal/80 font-light leading-relaxed pt-1">
+                        İnsanın kendi ürettiği nesnelere, kendi emeğine, doğaya, topluma ve nihayetinde kendi türsel özüne (Gattungswesen) karşı kopması, onlara düşmanca veya yabancı bir güç olarak boyun eğmesi durumu.
+                    </p>
+                </article>
+
+                <!-- 14. Maiotik (Doğurtma Yöntemi) -->
+                <article class="glossary-item p-6 rounded-2xl bg-parchment-card border border-parchment-border hover:border-sage-500/40 transition shadow-sm space-y-2 card-hover-effect">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-serif text-2xl text-charcoal font-semibold">Maiotik</h3>
+                        <span class="text-xs font-sans uppercase tracking-wider text-sage-600 bg-sage-50 px-2 py-0.5 rounded border border-sage-100">Diyalektik</span>
+                    </div>
+                    <p class="text-xs text-charcoal/50 italic">Grekçe: Ebelik Sanatı • Sokrates</p>
+                    <p class="text-sm text-charcoal/80 font-light leading-relaxed pt-1">
+                        Sokrates'in annesinin mesleğinden esinlenerek kurduğu pedagojik diyalog yöntemi. Kişiye dışarıdan hazır bilgi aktarmak yerine, ustaca kurgulanmış sorularla muhatabın zihninde saklı duran hakikatleri kendi kendine doğurtma sanatı.
+                    </p>
+                </article>
+
+                <!-- 15. Süre (Durée) -->
+                <article class="glossary-item p-6 rounded-2xl bg-parchment-card border border-parchment-border hover:border-clay-500/40 transition shadow-sm space-y-2 card-hover-effect">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-serif text-2xl text-charcoal font-semibold">Süre (Durée)</h3>
+                        <span class="text-xs font-sans uppercase tracking-wider text-clay-500 bg-clay-50 px-2 py-0.5 rounded border border-parchment-border">Zaman Felsefesi</span>
+                    </div>
+                    <p class="text-xs text-charcoal/50 italic">La Durée • Henri Bergson</p>
+                    <p class="text-sm text-charcoal/80 font-light leading-relaxed pt-1">
+                        Saatlerin mekânsallaştırılmış, bölünebilir ve homojen zamanına karşıt olarak; bilincin doğrudan tecrübe ettiği, bölünemez, kesintisiz ve niteliksel içsel akış. Süre ölçülemez; ancak sezgi (intuition) yoluyla kavranabilir.
+                    </p>
+                </article>
+            </div>
+        </section>
+
+        <!-- 4. GEÇMİŞ ETKİNLİKLER -->
         <section id="gecmis" class="tab-panel">
-            <div class="border-b border-parchment-border pb-4 mb-8">
+            <div class="border-b border-parchment-border pb-4 mb-8 anim-item delay-1">
                 <span class="text-xs uppercase tracking-widest text-clay-500 font-semibold px-2.5 py-1 rounded-full bg-parchment-darker inline-block">Arşiv</span>
                 <h2 class="font-serif text-3xl sm:text-4xl text-charcoal font-normal mt-2">Geçmiş Tartışmalar</h2>
             </div>
 
-            <div class="space-y-3">
-                <article class="p-5 rounded-2xl bg-parchment-card/70 border border-parchment-border hover:bg-parchment-card hover:border-sage-500/40 transition group">
+            <div class="space-y-3 anim-item delay-2">
+                <article class="p-5 rounded-2xl bg-parchment-card/70 border border-parchment-border hover:bg-parchment-card hover:border-sage-500/40 transition group card-hover-effect">
                     <div class="flex items-center gap-2 text-xs text-sage-600 font-medium mb-1">
                         <span>Eylül 2026</span>
                         <span>•</span>
@@ -243,7 +505,7 @@
                     </p>
                 </article>
 
-                <article class="p-5 rounded-2xl bg-parchment-card/70 border border-parchment-border hover:bg-parchment-card hover:border-terracotta-500/40 transition group">
+                <article class="p-5 rounded-2xl bg-parchment-card/70 border border-parchment-border hover:bg-parchment-card hover:border-terracotta-500/40 transition group card-hover-effect">
                     <div class="flex items-center gap-2 text-xs text-terracotta-600 font-medium mb-1">
                         <span>Ağustos 2026</span>
                         <span>•</span>
@@ -257,7 +519,7 @@
                     </p>
                 </article>
 
-                <article class="p-5 rounded-2xl bg-parchment-card/70 border border-parchment-border hover:bg-parchment-card hover:border-clay-500 transition group">
+                <article class="p-5 rounded-2xl bg-parchment-card/70 border border-parchment-border hover:bg-parchment-card hover:border-clay-500 transition group card-hover-effect">
                     <div class="flex items-center gap-2 text-xs text-clay-500 font-medium mb-1">
                         <span>Temmuz 2026</span>
                         <span>•</span>
@@ -273,15 +535,15 @@
             </div>
         </section>
 
-        <!-- 4. BLOG / DÜŞÜNCE GÜNLÜĞÜ -->
+        <!-- 5. BLOG / DÜŞÜNCE GÜNLÜĞÜ -->
         <section id="blog" class="tab-panel">
-            <div class="border-b border-parchment-border pb-4 mb-8">
+            <div class="border-b border-parchment-border pb-4 mb-8 anim-item delay-1">
                 <span class="text-xs uppercase tracking-widest text-terracotta-500 font-semibold px-2.5 py-1 rounded-full bg-terracotta-50 inline-block">Yazılar & Notlar</span>
                 <h2 class="font-serif text-3xl sm:text-4xl text-charcoal font-normal mt-2">LupusLogos Bülteni</h2>
             </div>
 
-            <div class="grid md:grid-cols-2 gap-6">
-                <div class="p-6 rounded-2xl bg-parchment-card border border-parchment-border hover:shadow-md hover:border-terracotta-500/30 transition flex flex-col justify-between">
+            <div class="grid md:grid-cols-2 gap-6 anim-item delay-2">
+                <div class="p-6 rounded-2xl bg-parchment-card border border-parchment-border hover:border-terracotta-500/30 transition flex flex-col justify-between card-hover-effect">
                     <div>
                         <div class="flex items-center gap-2 text-xs text-charcoal/50 mb-2">
                             <span class="px-2 py-0.5 rounded bg-terracotta-100 text-terracotta-600 font-medium">Düşünce Notu</span>
@@ -299,7 +561,7 @@
                     </div>
                 </div>
 
-                <div class="p-6 rounded-2xl bg-parchment-card border border-parchment-border hover:shadow-md hover:border-sage-500/30 transition flex flex-col justify-between">
+                <div class="p-6 rounded-2xl bg-parchment-card border border-parchment-border hover:border-sage-500/30 transition flex flex-col justify-between card-hover-effect">
                     <div>
                         <div class="flex items-center gap-2 text-xs text-charcoal/50 mb-2">
                             <span class="px-2 py-0.5 rounded bg-sage-100 text-sage-600 font-medium">İnceleme</span>
@@ -319,73 +581,94 @@
             </div>
         </section>
 
-        <!-- 5. FOTOĞRAFLAR (YÜKLENEN GÖRSELLER İLE GÜNCELLENDİ) -->
+        <!-- 6. FOTOĞRAFLAR (4 FOTOĞRAF + BÜYÜTME / LIGHTBOX ÖZELLİĞİ) -->
         <section id="fotograflar" class="tab-panel">
-            <div class="border-b border-parchment-border pb-4 mb-8">
-                <span class="text-xs uppercase tracking-widest text-sage-600 font-semibold px-2.5 py-1 rounded-full bg-sage-100 inline-block">Galeri</span>
-                <h2 class="font-serif text-3xl sm:text-4xl text-charcoal font-normal mt-2">Buluşmalardan Kareler</h2>
+            <div class="border-b border-parchment-border pb-4 mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-2 anim-item delay-1">
+                <div>
+                    <span class="text-xs uppercase tracking-widest text-sage-600 font-semibold px-2.5 py-1 rounded-full bg-sage-100 inline-block">Galeri</span>
+                    <h2 class="font-serif text-3xl sm:text-4xl text-charcoal font-normal mt-2">Buluşmalardan Kareler</h2>
+                </div>
+                <span class="text-xs text-charcoal/50 italic font-light">Fotoğrafları büyütmek için üzerine tıklayabilirsiniz.</span>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-                <!-- 1. Platon Büstü -->
-                <div class="photo-card overflow-hidden rounded-2xl bg-parchment-darker aspect-[4/3] border border-parchment-border shadow-sm">
-                    <img src="gorseller/Plato_Silanion_Musei_Capitolini_MC1377.jpg" 
-                         alt="Platon Büstü" 
-                         class="w-full h-full object-cover" 
-                         loading="lazy" 
-                         onerror="this.src='https://placehold.co/600x450/e3dcce/5f7a68?text=Platon+Büstü'">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 anim-item delay-2">
+                <!-- Fotoğraf 1: Platon Büstü -->
+                <div onclick="openLightbox('gorseller/Plato_Silanion_Musei_Capitolini_MC1377.jpg', 'Platon Büstü — Musei Capitolini')" 
+                     class="photo-card group cursor-pointer overflow-hidden rounded-2xl bg-parchment-card border border-parchment-border shadow-sm card-hover-effect">
+                    <div class="aspect-[4/3] overflow-hidden bg-parchment-darker">
+                        <img src="gorseller/Plato_Silanion_Musei_Capitolini_MC1377.jpg" 
+                             alt="Platon Büstü" 
+                             class="w-full h-full object-cover" 
+                             loading="lazy">
+                    </div>
+                    <div class="p-3.5 flex items-center justify-between text-xs text-charcoal/70">
+                        <span class="font-medium text-charcoal">Platon Büstü</span>
+                        <span class="text-sage-600 group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                            Büyüt 
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"></path></svg>
+                        </span>
+                    </div>
                 </div>
 
-                <!-- 2. Tasarım Görseli -->
-                <div class="photo-card overflow-hidden rounded-2xl bg-parchment-darker aspect-[4/3] border border-parchment-border shadow-sm">
-                    <img src="gorseller/Adsiz-tasarim-2024-04-07T224456.688-680x496.webp" 
-                         alt="Atölye Tasarımı" 
-                         class="w-full h-full object-cover" 
-                         loading="lazy" 
-                         onerror="this.src='https://placehold.co/600x450/e3dcce/b86f52?text=Felsefe+Atölyesi'">
+                <!-- Fotoğraf 2: Atölye Tasarımı -->
+                <div onclick="openLightbox('gorseller/Adsiz-tasarim-2024-04-07T224456.688-680x496.webp', 'Felsefe Atölyesi Görseli')" 
+                     class="photo-card group cursor-pointer overflow-hidden rounded-2xl bg-parchment-card border border-parchment-border shadow-sm card-hover-effect">
+                    <div class="aspect-[4/3] overflow-hidden bg-parchment-darker">
+                        <img src="gorseller/Adsiz-tasarim-2024-04-07T224456.688-680x496.webp" 
+                             alt="Felsefe Atölyesi" 
+                             class="w-full h-full object-cover" 
+                             loading="lazy">
+                    </div>
+                    <div class="p-3.5 flex items-center justify-between text-xs text-charcoal/70">
+                        <span class="font-medium text-charcoal">Atölye ve Diyalog</span>
+                        <span class="text-sage-600 group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                            Büyüt 
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"></path></svg>
+                        </span>
+                    </div>
                 </div>
 
-                <!-- 3. Yüklenen Görsel 3 -->
-                <div class="photo-card overflow-hidden rounded-2xl bg-parchment-darker aspect-[4/3] border border-parchment-border shadow-sm">
-                    <img src="gorseller/fb1b7fc8048fbda0618b0c132ca0f0ad.jpg" 
-                         alt="Felsefe Buluşması" 
-                         class="w-full h-full object-cover" 
-                         loading="lazy" 
-                         onerror="this.src='https://placehold.co/600x450/e3dcce/8a7b6d?text=Buluşma+Karesi'">
+                <!-- Fotoğraf 3: Buluşma Karesi -->
+                <div onclick="openLightbox('gorseller/fb1b7fc8048fbda0618b0c132ca0f0ad.jpg', 'Felsefe Kulübü Buluşması')" 
+                     class="photo-card group cursor-pointer overflow-hidden rounded-2xl bg-parchment-card border border-parchment-border shadow-sm card-hover-effect">
+                    <div class="aspect-[4/3] overflow-hidden bg-parchment-darker">
+                        <img src="gorseller/fb1b7fc8048fbda0618b0c132ca0f0ad.jpg" 
+                             alt="Felsefe Kulübü Buluşması" 
+                             class="w-full h-full object-cover" 
+                             loading="lazy">
+                    </div>
+                    <div class="p-3.5 flex items-center justify-between text-xs text-charcoal/70">
+                        <span class="font-medium text-charcoal">Felsefe Meclisi</span>
+                        <span class="text-sage-600 group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                            Büyüt 
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"></path></svg>
+                        </span>
+                    </div>
                 </div>
 
-                <!-- 4. Yüklenen Görsel 4 -->
-                <div class="photo-card overflow-hidden rounded-2xl bg-parchment-darker aspect-[4/3] border border-parchment-border shadow-sm">
-                    <img src="gorseller/istockphoto-2214682201-612x612.jpg" 
-                         alt="Toplantı ve Diyalog" 
-                         class="w-full h-full object-cover" 
-                         loading="lazy" 
-                         onerror="this.src='https://placehold.co/600x450/e3dcce/5f7a68?text=Diyalog'">
-                </div>
-
-                <!-- 5. Tamamlayıcı Görsel 5 -->
-                <div class="photo-card overflow-hidden rounded-2xl bg-parchment-darker aspect-[4/3] border border-parchment-border shadow-sm">
-                    <img src="https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&w=800&q=80" 
-                         alt="Klasik Eserler" 
-                         class="w-full h-full object-cover" 
-                         loading="lazy" 
-                         onerror="this.src='https://placehold.co/600x450/e3dcce/b86f52?text=Metin+Okumaları'">
-                </div>
-
-                <!-- 6. Tamamlayıcı Görsel 6 -->
-                <div class="photo-card overflow-hidden rounded-2xl bg-parchment-darker aspect-[4/3] border border-parchment-border shadow-sm">
-                    <img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=800&q=80" 
-                         alt="Kütüphane Buluşması" 
-                         class="w-full h-full object-cover" 
-                         loading="lazy" 
-                         onerror="this.src='https://placehold.co/600x450/e3dcce/8a7b6d?text=Kütüphane+Saati'">
+                <!-- Fotoğraf 4: Tartışma ve Diyalog -->
+                <div onclick="openLightbox('gorseller/istockphoto-2214682201-612x612.jpg', 'Grup Tartışması ve Müzakere')" 
+                     class="photo-card group cursor-pointer overflow-hidden rounded-2xl bg-parchment-card border border-parchment-border shadow-sm card-hover-effect">
+                    <div class="aspect-[4/3] overflow-hidden bg-parchment-darker">
+                        <img src="gorseller/istockphoto-2214682201-612x612.jpg" 
+                             alt="Grup Tartışması" 
+                             class="w-full h-full object-cover" 
+                             loading="lazy">
+                    </div>
+                    <div class="p-3.5 flex items-center justify-between text-xs text-charcoal/70">
+                        <span class="font-medium text-charcoal">Fikir Müzakeresi</span>
+                        <span class="text-sage-600 group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                            Büyüt 
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"></path></svg>
+                        </span>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- 6. ÖNERİ VE ELEŞTİRİ GİRİŞİ (NETLIFY ENTEGRELİ) -->
+        <!-- 7. ÖNERİ VE ELEŞTİRİ GİRİŞİ (NETLIFY ENTEGRELİ) -->
         <section id="oneri-elestiri" class="tab-panel">
-            <div class="max-w-xl mx-auto p-8 rounded-3xl bg-parchment-card border border-parchment-border shadow-sm">
+            <div class="max-w-xl mx-auto p-8 rounded-3xl bg-parchment-card border border-parchment-border shadow-sm anim-item delay-1 card-hover-effect">
                 <div class="text-center pb-6 border-b border-parchment-border mb-6">
                     <span class="text-xs uppercase tracking-widest text-terracotta-500 font-semibold px-2.5 py-1 rounded-full bg-terracotta-50 inline-block">Agora Kutusu</span>
                     <h2 class="font-serif text-3xl sm:text-4xl text-charcoal font-normal mt-2">Öneri & Eleştiri</h2>
@@ -395,7 +678,6 @@
                 </div>
 
                 <form id="feedbackForm" name="oneri-kutusu" method="POST" data-netlify="true" onsubmit="handleFormSubmit(event)" class="space-y-4">
-                    <!-- Netlify robot tespiti için gerekli gizli parametre -->
                     <input type="hidden" name="form-name" value="oneri-kutusu" />
 
                     <div>
@@ -432,6 +714,17 @@
 
     </main>
 
+    <!-- FOTOĞRAF BÜYÜTME (LIGHTBOX) MODALI -->
+    <div id="lightboxModal" onclick="closeLightbox(event)" class="fixed inset-0 bg-[#282421]/80 backdrop-blur-md z-50 hidden items-center justify-center p-4 transition-all duration-300">
+        <div class="relative max-w-4xl max-h-[90vh] flex flex-col items-center modal-animated">
+            <button onclick="closeLightboxDirect()" class="absolute -top-10 right-0 sm:-right-10 text-parchment-base hover:text-white p-2 rounded-full hover:bg-white/10 interactive-btn" title="Kapat">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <img id="lightboxImg" src="" alt="Büyük Görsel" class="max-w-full max-h-[80vh] object-contain rounded-2xl shadow-2xl border border-parchment-border/40">
+            <p id="lightboxCaption" class="text-sm font-serif text-parchment-card mt-3 text-center tracking-wide"></p>
+        </div>
+    </div>
+
     <!-- Başarı Bildirimi (Toast) -->
     <div id="toast" class="fixed bottom-6 right-6 transform translate-y-20 opacity-0 pointer-events-none bg-charcoal text-parchment-card px-5 py-3 rounded-2xl shadow-xl flex items-center gap-3 z-50 text-sm border border-parchment-border">
         <span class="w-6 h-6 rounded-full bg-sage-500/30 text-sage-400 flex items-center justify-center shrink-0">
@@ -442,7 +735,7 @@
 
     <!-- Blog Önizleme Modalı -->
     <div id="mockModal" class="fixed inset-0 bg-charcoal/50 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-        <div class="bg-parchment-card max-w-lg w-full rounded-3xl p-6 sm:p-8 border border-parchment-border shadow-2xl space-y-4">
+        <div class="bg-parchment-card max-w-lg w-full rounded-3xl p-6 sm:p-8 border border-parchment-border shadow-2xl space-y-4 modal-animated">
             <div class="flex justify-between items-start">
                 <h3 id="modalTitle" class="font-serif text-2xl text-charcoal font-medium"></h3>
                 <button onclick="closeModal()" class="text-charcoal/50 hover:text-charcoal p-1 interactive-btn rounded-full hover:bg-parchment-base">
@@ -468,6 +761,7 @@
             <div class="flex gap-4">
                 <span class="hover:text-charcoal cursor-pointer transition" onclick="switchTab('biz-kimiz')">Giriş</span>
                 <span class="hover:text-charcoal cursor-pointer transition" onclick="switchTab('program')">Takvim</span>
+                <span class="hover:text-charcoal cursor-pointer transition" onclick="switchTab('sozluk')">Sözlük</span>
                 <span class="hover:text-charcoal cursor-pointer transition" onclick="switchTab('oneri-elestiri')">İletişim</span>
             </div>
         </div>
@@ -490,6 +784,14 @@
             const targetPanel = document.getElementById(tabId);
             if (targetPanel) {
                 targetPanel.classList.add('active');
+
+                // Sekme açıldığında içindeki animasyonları sıfırdan tetikle
+                const animItems = targetPanel.querySelectorAll('.anim-item');
+                animItems.forEach(item => {
+                    item.style.animation = 'none';
+                    item.offsetHeight; // reflow tetikleme
+                    item.style.animation = '';
+                });
             }
 
             const activeBtn = document.getElementById('btn-' + tabId);
@@ -499,6 +801,24 @@
             }
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Canlı Sözlük Filtreleme Fonksiyonu (Yumuşak Geçişli)
+        function filterGlossary() {
+            const input = document.getElementById('sozlukSearch');
+            const filter = input.value.toLowerCase();
+            const items = document.querySelectorAll('.glossary-item');
+
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(filter)) {
+                    item.style.display = '';
+                    item.style.opacity = '1';
+                } else {
+                    item.style.display = 'none';
+                    item.style.opacity = '0';
+                }
+            });
         }
 
         // Netlify Uyumlu Arka Plan Form Gönderimi
@@ -565,6 +885,40 @@
             modal.classList.add('hidden');
             modal.classList.remove('flex');
         }
+
+        // Lightbox (Görsel Büyütme) Fonksiyonları
+        function openLightbox(src, caption) {
+            const modal = document.getElementById('lightboxModal');
+            const img = document.getElementById('lightboxImg');
+            const cap = document.getElementById('lightboxCaption');
+
+            img.src = src;
+            cap.textContent = caption || '';
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox(event) {
+            if (event.target.id === 'lightboxModal') {
+                closeLightboxDirect();
+            }
+        }
+
+        function closeLightboxDirect() {
+            const modal = document.getElementById('lightboxModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = '';
+        }
+
+        // Escape tuşu ile modal kapatma desteği
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeLightboxDirect();
+                closeModal();
+            }
+        });
 
         document.addEventListener('DOMContentLoaded', () => {
             switchTab('biz-kimiz');
