@@ -19,30 +19,29 @@
                         sans: ['"Inter"', 'sans-serif'],
                     },
                     colors: {
-                        // Sıcak, gözü dinlendiren pastel tonlar
                         parchment: {
-                            base: '#F4EFE6',      // Yumuşak, göz yormayan parşömen arkaplan
-                            card: '#FAF6EE',      // Hafif sıcak kart tonu
-                            border: '#E3DCce',    // Dingin kenarlık
-                            darker: '#EDE7DC',    // İkincil zemin
+                            base: '#F4EFE6',
+                            card: '#FAF6EE',
+                            border: '#E3DCce',
+                            darker: '#EDE7DC',
                         },
                         sage: {
                             50: '#F2F6F3',
                             100: '#E4ECE5',
-                            500: '#5F7A68',       // Dingin zeytin/adaçayı yeşili
+                            500: '#5F7A68',
                             600: '#4D6455',
                         },
                         terracotta: {
                             50: '#FDF6F0',
                             100: '#FAECE2',
-                            500: '#B86F52',       // Sıcak kiremit / toprak
+                            500: '#B86F52',
                             600: '#9E5B42',
                         },
                         clay: {
                             50: '#F6F3EE',
                             500: '#8A7B6D',
                         },
-                        charcoal: '#282421',      // Saf siyah yerine koyu kahve-füme (daha yumuşak kontrast)
+                        charcoal: '#282421',
                     }
                 }
             }
@@ -58,7 +57,6 @@
             background-size: 24px 24px;
         }
 
-        /* Sekme geçiş yumuşatma efekti */
         .tab-panel {
             opacity: 0;
             transform: translateY(8px);
@@ -72,7 +70,6 @@
             transform: translateY(0);
         }
 
-        /* Yumuşak buton tıklama mikro etkileşimi */
         .interactive-btn {
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -81,7 +78,6 @@
             transform: scale(0.97);
         }
 
-        /* Zarif fotoğraf çerçevesi ve gölgesi */
         .photo-card img {
             transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
@@ -89,7 +85,6 @@
             transform: scale(1.04);
         }
 
-        /* Özel bildirim toast animasyonu */
         #toast {
             transition: transform 0.35s ease, opacity 0.35s ease;
         }
@@ -196,7 +191,6 @@
             </div>
 
             <div class="space-y-4">
-                <!-- Etkinlik Kartı 1 -->
                 <div class="p-6 rounded-2xl bg-parchment-card border border-parchment-border hover:border-terracotta-500/40 transition shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div class="space-y-1.5">
                         <span class="text-xs font-semibold px-3 py-1 rounded-full bg-terracotta-100 text-terracotta-600 inline-block">Kitap Kulübü</span>
@@ -211,7 +205,6 @@
                     </div>
                 </div>
 
-                <!-- Etkinlik Kartı 2 -->
                 <div class="p-6 rounded-2xl bg-parchment-card border border-parchment-border hover:border-sage-500/40 transition shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div class="space-y-1.5">
                         <span class="text-xs font-semibold px-3 py-1 rounded-full bg-sage-100 text-sage-600 inline-block">Açık Tartışma</span>
@@ -288,7 +281,6 @@
             </div>
 
             <div class="grid md:grid-cols-2 gap-6">
-                <!-- Blog Kartı 1 -->
                 <div class="p-6 rounded-2xl bg-parchment-card border border-parchment-border hover:shadow-md hover:border-terracotta-500/30 transition flex flex-col justify-between">
                     <div>
                         <div class="flex items-center gap-2 text-xs text-charcoal/50 mb-2">
@@ -307,7 +299,6 @@
                     </div>
                 </div>
 
-                <!-- Blog Kartı 2 -->
                 <div class="p-6 rounded-2xl bg-parchment-card border border-parchment-border hover:shadow-md hover:border-sage-500/30 transition flex flex-col justify-between">
                     <div>
                         <div class="flex items-center gap-2 text-xs text-charcoal/50 mb-2">
@@ -338,6 +329,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
                 <div class="photo-card overflow-hidden rounded-2xl bg-parchment-darker aspect-[4/3] border border-parchment-border shadow-sm">
                     <img src="Gemini_Generated_Image_we43hswe43hswe43.jfif" 
+                         alt="Kitap ve Kahve" 
                          class="w-full h-full object-cover" 
                          loading="lazy" 
                          onerror="this.src='https://placehold.co/600x450/e3dcce/5f7a68?text=Kitap+Okuması'">
@@ -385,7 +377,7 @@
             </div>
         </section>
 
-        <!-- 6. ÖNERİ VE ELEŞTİRİ GİRİŞİ -->
+        <!-- 6. ÖNERİ VE ELEŞTİRİ GİRİŞİ (NETLIFY ENTEGRELİ) -->
         <section id="oneri-elestiri" class="tab-panel">
             <div class="max-w-xl mx-auto p-8 rounded-3xl bg-parchment-card border border-parchment-border shadow-sm">
                 <div class="text-center pb-6 border-b border-parchment-border mb-6">
@@ -396,31 +388,34 @@
                     </p>
                 </div>
 
-                <form id="feedbackForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                <form id="feedbackForm" name="oneri-kutusu" method="POST" data-netlify="true" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                    <!-- Netlify robot tespiti için gerekli gizli parametre -->
+                    <input type="hidden" name="form-name" value="oneri-kutusu" />
+
                     <div>
                         <label for="name" class="block text-xs uppercase tracking-wider text-charcoal/60 mb-1.5 font-medium">İsim (İsteğe Bağlı / Anonim)</label>
-                        <input type="text" id="name" placeholder="Örn: Diyojen veya İsimsiz" 
+                        <input type="text" id="name" name="isim" placeholder="Örn: Diyojen veya İsimsiz" 
                                class="w-full px-4 py-2.5 rounded-xl bg-parchment-base border border-parchment-border text-charcoal placeholder-charcoal/30 focus:outline-none focus:ring-2 focus:ring-sage-500/30 focus:border-sage-500 transition text-sm">
                     </div>
 
                     <div>
                         <label for="category" class="block text-xs uppercase tracking-wider text-charcoal/60 mb-1.5 font-medium">Kategori</label>
-                        <select id="category" class="w-full px-4 py-2.5 rounded-xl bg-parchment-base border border-parchment-border text-charcoal focus:outline-none focus:ring-2 focus:ring-sage-500/30 focus:border-sage-500 transition text-sm">
-                            <option value="konu-onerisi">Konu / Tema Önerisi</option>
-                            <option value="kitap-onerisi">Kitap / Metin Tavsiyesi</option>
-                            <option value="elestiri">Yapıcı Eleştiri & Geliştirme</option>
-                            <option value="diger">Diğer Fikirler</option>
+                        <select id="category" name="kategori" class="w-full px-4 py-2.5 rounded-xl bg-parchment-base border border-parchment-border text-charcoal focus:outline-none focus:ring-2 focus:ring-sage-500/30 focus:border-sage-500 transition text-sm">
+                            <option value="Konu / Tema Önerisi">Konu / Tema Önerisi</option>
+                            <option value="Kitap / Metin Tavsiyesi">Kitap / Metin Tavsiyesi</option>
+                            <option value="Yapıcı Eleştiri & Geliştirme">Yapıcı Eleştiri & Geliştirme</option>
+                            <option value="Diğer Fikirler">Diğer Fikirler</option>
                         </select>
                     </div>
 
                     <div>
                         <label for="message" class="block text-xs uppercase tracking-wider text-charcoal/60 mb-1.5 font-medium">Düşünceniz / Mesajınız *</label>
-                        <textarea id="message" required rows="4" placeholder="Fikrinizi buraya yazabilirsiniz..." 
+                        <textarea id="message" name="mesaj" required rows="4" placeholder="Fikrinizi buraya yazabilirsiniz..." 
                                   class="w-full px-4 py-2.5 rounded-xl bg-parchment-base border border-parchment-border text-charcoal placeholder-charcoal/30 focus:outline-none focus:ring-2 focus:ring-sage-500/30 focus:border-sage-500 transition text-sm resize-none"></textarea>
                     </div>
 
                     <div class="pt-2">
-                        <button type="submit" 
+                        <button type="submit" id="submitBtn"
                                 class="w-full py-3 px-6 rounded-xl bg-sage-500 text-white hover:bg-sage-600 text-sm font-medium tracking-wide interactive-btn shadow-md hover:shadow-lg transition">
                             Görüşü İlet
                         </button>
@@ -473,54 +468,71 @@
     </footer>
 
     <script>
-        // Aktif sekmeyi yöneten ve yumuşak animasyon sağlayan fonksiyon
         function switchTab(tabId) {
             const panels = document.querySelectorAll('.tab-panel');
             const buttons = document.querySelectorAll('.nav-btn');
 
-            // Tüm panelleri gizle
             panels.forEach(panel => {
                 panel.classList.remove('active');
             });
 
-            // Buton aktiflik stillerini sıfırla
             buttons.forEach(btn => {
                 btn.classList.remove('bg-charcoal', 'text-parchment-card', 'shadow-sm', 'border-charcoal');
                 btn.classList.add('text-charcoal/80', 'border-transparent');
             });
 
-            // Hedef paneli göster
             const targetPanel = document.getElementById(tabId);
             if (targetPanel) {
                 targetPanel.classList.add('active');
             }
 
-            // Aktif butonu vurgula (pastel uyumlu şık koyu zemin)
             const activeBtn = document.getElementById('btn-' + tabId);
             if (activeBtn) {
                 activeBtn.classList.remove('text-charcoal/80', 'border-transparent');
                 activeBtn.classList.add('bg-charcoal', 'text-parchment-card', 'shadow-sm');
             }
 
-            // Sayfayı hafifçe içeriğe kaydır
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Öneri & Eleştiri Form İşleme
+        // Netlify Uyumlu Arka Plan Form Gönderimi
         function handleFormSubmit(event) {
             event.preventDefault();
+            
+            const form = event.target;
+            const submitBtn = document.getElementById('submitBtn');
             const messageInput = document.getElementById('message');
             
             if (!messageInput.value.trim()) return;
 
-            // Formu temizle
-            document.getElementById('feedbackForm').reset();
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'İletiliyor...';
 
-            // Toast bildirimini göster
-            showToast("Öneriniz ve kıymetli düşünceniz kaydedildi!");
+            const formData = new FormData(form);
+
+            fetch('/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams(formData).toString()
+            })
+            .then(response => {
+                if (response.ok) {
+                    form.reset();
+                    showToast("Öneriniz ve düşünceniz başarıyla iletildi.");
+                } else {
+                    showToast("Bir sorun oluştu, lütfen tekrar deneyin.");
+                }
+            })
+            .catch(error => {
+                showToast("Gönderim başarısız oldu.");
+                console.error('Netlify Form Error:', error);
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'Görüşü İlet';
+            });
         }
 
-        // Sade Toast Bildirimi Gösterici
         function showToast(msg) {
             const toast = document.getElementById('toast');
             const toastMsg = document.getElementById('toast-message');
@@ -535,7 +547,6 @@
             }, 3000);
         }
 
-        // Blog Modal Fonksiyonları
         function showMockModal(title) {
             document.getElementById('modalTitle').textContent = title;
             const modal = document.getElementById('mockModal');
@@ -549,7 +560,6 @@
             modal.classList.remove('flex');
         }
 
-        // Sayfa yüklendiğinde varsayılan sekmeyi ayarla
         document.addEventListener('DOMContentLoaded', () => {
             switchTab('biz-kimiz');
         });
