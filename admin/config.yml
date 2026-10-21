@@ -1,0 +1,30 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "gorseller"
+public_folder: "gorseller"
+
+collections:
+  - name: "etkinlikler"
+    label: "Gelecek Program"
+    folder: "icerik/etkinlikler"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Kategori", name: "kategori", widget: "string", default: "Kitap Kulübü" }
+      - { label: "Etkinlik Başlığı", name: "title", widget: "string" }
+      - { label: "Tarih ve Saat", name: "tarih", widget: "string", default: "28 Ekim 2026, 19:00" }
+      - { label: "Yer / Format", name: "yer", widget: "string", default: "Çevrim İçi Seminer Odası" }
+      - { label: "Detay / Açıklama", name: "body", widget: "markdown" }
+
+  - name: "blog"
+    label: "Blog Yazıları"
+    folder: "icerik/blog"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Başlık", name: "title", widget: "string" }
+      - { label: "Tarih", name: "date", widget: "datetime" }
+      - { label: "Özet Metin", name: "ozet", widget: "string" }
+      - { label: "Yazı İçeriği", name: "body", widget: "markdown" }
