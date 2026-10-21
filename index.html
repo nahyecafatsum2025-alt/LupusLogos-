@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LupusLogos — Felsefe Kulübü</title>
+    <!-- Google Fonts: Cormorant Garamond & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Inter"', 'sans-serif'],
+                    },
+                    colors: {
+                        // Sıcak, gözü dinlendiren pastel tonlar
+                        parchment: {
+                            base: '#F4EFE6',      // Yumuşak, göz yormayan parşömen arkaplan
+                            card: '#FAF6EE',      // Hafif sıcak kart tonu
+                            border: '#E3DCce',    // Dingin kenarlık
+                            darker: '#EDE7DC',    // İkincil zemin
+                        },
+                        sage: {
+                            50: '#F2F6F3',
+                            100: '#E4ECE5',
+                            500: '#5F7A68',       // Dingin zeytin/adaçayı yeşili
+                            600: '#4D6455',
+                        },
+                        terracotta: {
+                            50: '#FDF6F0',
+                            100: '#FAECE2',
+                            500: '#B86F52',       // Sıcak kiremit / toprak
+                            600: '#9E5B42',
+                        },
+                        clay: {
+                            50: '#F6F3EE',
+                            500: '#8A7B6D',
+                        },
+                        charcoal: '#282421',      // Saf siyah yerine koyu kahve-füme (daha yumuşak kontrast)
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #F4EFE6;
+            color: #282421;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            background-image: radial-gradient(#e5dec9 0.75px, transparent 0.75px);
+            background-size: 24px 24px;
+        }
+
+        /* Sekme geçiş yumuşatma efekti */
+        .tab-panel {
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Yumuşak buton tıklama mikro etkileşimi */
+        .interactive-btn {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .interactive-btn:active {
+            transform: scale(0.97);
+        }
+
+        /* Zarif fotoğraf çerçevesi ve gölgesi */
+        .photo-card img {
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .photo-card:hover img {
+            transform: scale(1.04);
+        }
+
+        /* Özel bildirim toast animasyonu */
+        #toast {
+            transition: transform 0.35s ease, opacity 0.35s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-terracotta-100 selection:text-terracotta-600">
+
+    <!-- Üst Bar / Başlık ve Navigasyon -->
+    <header class="border-b border-parchment-border/80 sticky top-0 bg-[#F4EFE6]/92 backdrop-blur-md z-40 transition-colors">
+        <div class="max-w-5xl mx-auto px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <!-- Logo -->
+            <a href="javascript:void(0)" onclick="switchTab('biz-kimiz')" class="group flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-full bg-sage-500/15 text-sage-600 flex items-center justify-center font-serif text-lg font-bold border border-sage-500/30 group-hover:bg-sage-500 group-hover:text-white transition-all duration-300">
+                    L
+                </div>
+                <div class="flex items-baseline gap-2">
+                    <span class="font-serif text-3xl font-semibold tracking-wide text-charcoal group-hover:text-terracotta-500 transition-colors">
+                        LupusLogos
+                    </span>
+                    <span class="text-xs uppercase tracking-widest text-clay-500 font-sans border-l border-parchment-border pl-2">
+                        Felsefe Kulübü
+                    </span>
+                </div>
+            </a>
+
+            <!-- Navigasyon Sekmeleri -->
+            <nav class="flex flex-wrap justify-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-charcoal/80 font-medium">
+                <button onclick="switchTab('biz-kimiz')" id="btn-biz-kimiz" class="nav-btn px-3.5 py-1.5 rounded-full interactive-btn hover:text-charcoal hover:bg-parchment-card transition border border-transparent">
+                    Biz Kimiz
+                </button>
+                <button onclick="switchTab('program')" id="btn-program" class="nav-btn px-3.5 py-1.5 rounded-full interactive-btn hover:text-charcoal hover:bg-parchment-card transition border border-transparent">
+                    Gelecek Program
+                </button>
+                <button onclick="switchTab('gecmis')" id="btn-gecmis" class="nav-btn px-3.5 py-1.5 rounded-full interactive-btn hover:text-charcoal hover:bg-parchment-card transition border border-transparent">
+                    Geçmiş Etkinlikler
+                </button>
+                <button onclick="switchTab('blog')" id="btn-blog" class="nav-btn px-3.5 py-1.5 rounded-full interactive-btn hover:text-charcoal hover:bg-parchment-card transition border border-transparent">
+                    Blog
+                </button>
+                <button onclick="switchTab('fotograflar')" id="btn-fotograflar" class="nav-btn px-3.5 py-1.5 rounded-full interactive-btn hover:text-charcoal hover:bg-parchment-card transition border border-transparent">
+                    Fotoğraflar
+                </button>
+                <button onclick="switchTab('oneri-elestiri')" id="btn-oneri-elestiri" class="nav-btn px-3.5 py-1.5 rounded-full interactive-btn hover:text-charcoal hover:bg-parchment-card transition border border-transparent">
+                    Görüş & Öneri
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-4xl w-full mx-auto px-6 py-10 flex-grow">
+
+        <!-- 1. BİZ KİMİZ -->
+        <section id="biz-kimiz" class="tab-panel active">
+            <div class="space-y-8">
+                <div class="border-b border-parchment-border pb-6">
+                    <span class="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest text-terracotta-500 font-semibold px-2.5 py-1 rounded-full bg-terracotta-50 border border-terracotta-100">
+                        <span class="w-1.5 h-1.5 rounded-full bg-terracotta-500"></span>
+                        Manifestomuz
+                    </span>
+                    <h1 class="font-serif text-4xl sm:text-5xl mt-3 text-charcoal font-normal leading-tight">
+                        Sorgulanmamış bir hayat, yaşamaya değmez.
+                    </h1>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-8 text-charcoal/80 leading-relaxed font-light text-base sm:text-lg">
+                    <div class="p-6 rounded-2xl bg-parchment-card/80 border border-parchment-border shadow-sm">
+                        <p>
+                            <strong class="font-medium text-charcoal text-sage-600">LupusLogos</strong>, dogmalardan uzak, düşünceyi ve diyalektiği bir yaşam biçimi olarak gören bireylerin bir araya geldiği bağımsız bir düşünce alanıdır. Amacımız kesin yanıtlar üretmek değil; doğru ve derinlikli sorular sormayı öğrenmektir.
+                        </p>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-parchment-card/80 border border-parchment-border shadow-sm">
+                        <p>
+                            Antik Stoacılıktan varoluşçuluğa, zihin felsefesinden modern etik ikilemlere kadar her iki haftada bir sıcak bir çay veya kütüphane sessizliğinde buluşuyor, fikirlerimizi nezaket ve akıl süzgecinde çarpıştırıyoruz.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Kulüp İlkeleri -->
+                <div class="grid sm:grid-cols-3 gap-4 pt-2">
+                    <div class="p-5 rounded-2xl bg-sage-50/70 border border-sage-100/80 hover:border-sage-500/30 transition shadow-sm">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-sage-600 block mb-1">İlke 01</span>
+                        <div class="font-serif text-2xl text-charcoal mb-1">Parrhesia</div>
+                        <p class="text-xs text-charcoal/70 leading-normal">Cesurca ve dürüstçe konuşma; önyargılardan arınmış samimi ve doğrudan fikir alışverişi.</p>
+                    </div>
+                    <div class="p-5 rounded-2xl bg-terracotta-50/70 border border-terracotta-100/80 hover:border-terracotta-500/30 transition shadow-sm">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-terracotta-600 block mb-1">İlke 02</span>
+                        <div class="font-serif text-2xl text-charcoal mb-1">Epokhe</div>
+                        <p class="text-xs text-charcoal/70 leading-normal">Hükmü askıya alma yetisi; peşin yargıya varmadan önce diğer bakış açılarına zihinsel alan açmak.</p>
+                    </div>
+                    <div class="p-5 rounded-2xl bg-clay-50/90 border border-parchment-border hover:border-clay-500/40 transition shadow-sm">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-clay-500 block mb-1">İlke 03</span>
+                        <div class="font-serif text-2xl text-charcoal mb-1">Diyalog</div>
+                        <p class="text-xs text-charcoal/70 leading-normal">Kazanma kaygısı taşımayan, düşünceyi birlikte doğurmayı (maiotik) amaçlayan derin sohbet.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. GELECEK PROGRAM -->
+        <section id="program" class="tab-panel">
+            <div class="border-b border-parchment-border pb-4 mb-8">
+                <span class="text-xs uppercase tracking-widest text-sage-600 font-semibold px-2.5 py-1 rounded-full bg-sage-100 inline-block">Gündem</span>
+                <h2 class="font-serif text-3xl sm:text-4xl text-charcoal font-normal mt-2">Gelecek Buluşmalar</h2>
+            </div>
+
+            <div class="space-y-4">
+                <!-- Etkinlik Kartı 1 -->
+                <div class="p-6 rounded-2xl bg-parchment-card border border-parchment-border hover:border-terracotta-500/40 transition shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div class="space-y-1.5">
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-terracotta-100 text-terracotta-600 inline-block">Kitap Kulübü</span>
+                        <h3 class="font-serif text-2xl text-charcoal pt-1">Albert Camus & Yabancılaşma</h3>
+                        <p class="text-sm text-charcoal/75 font-light max-w-xl">
+                            Absürdün penceresinden Meursault karakteri, toplumsal normlar ve anlamsızlık karşısında başkaldırı.
+                        </p>
+                    </div>
+                    <div class="text-left md:text-right text-xs text-charcoal/70 whitespace-nowrap bg-parchment-darker/60 p-3 rounded-xl border border-parchment-border/60">
+                        <div class="font-semibold text-charcoal text-sm">28 Ekim 2026</div>
+                        <div class="text-terracotta-600 font-medium">19:00 — Kadıköy Sahil Kafe & Online</div>
+                    </div>
+                </div>
+
+                <!-- Etkinlik Kartı 2 -->
+                <div class="p-6 rounded-2xl bg-parchment-card border border-parchment-border hover:border-sage-500/40 transition shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div class="space-y-1.5">
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-sage-100 text-sage-600 inline-block">Açık Tartışma</span>
+                        <h3 class="font-serif text-2xl text-charcoal pt-1">Yapay Zeka Çağında Zihin ve Bilinç</h3>
+                        <p class="text-sm text-charcoal/75 font-light max-w-xl">
+                            Turing testi, Searle'ın Çin Odası argümanı ve makinelerin bilinç sahibi olma ihtimalinin ahlaki boyutları.
+                        </p>
+                    </div>
+                    <div class="text-left md:text-right text-xs text-charcoal/70 whitespace-nowrap bg-parchment-darker/60 p-3 rounded-xl border border-parchment-border/60">
+                        <div class="font-semibold text-charcoal text-sm">11 Kasım 2026</div>
+                        <div class="text-sage-600 font-medium">20:30 — Çevrim İçi Seminer Odası</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. GEÇMİŞ ETKİNLİKLER -->
+        <section id="gecmis" class="tab-panel">
+            <div class="border-b border-parchment-border pb-4 mb-8">
+                <span class="text-xs uppercase tracking-widest text-clay-500 font-semibold px-2.5 py-1 rounded-full bg-parchment-darker inline-block">Arşiv</span>
+                <h2 class="font-serif text-3xl sm:text-4xl text-charcoal font-normal mt-2">Geçmiş Tartışmalar</h2>
+            </div>
+
+            <div class="space-y-3">
+                <article class="p-5 rounded-2xl bg-parchment-card/70 border border-parchment-border hover:bg-parchment-card hover:border-sage-500/40 transition group">
+                    <div class="flex items-center gap-2 text-xs text-sage-600 font-medium mb-1">
+                        <span>Eylül 2026</span>
+                        <span>•</span>
+                        <span class="text-charcoal/60">24 Katılımcı</span>
+                    </div>
+                    <h3 class="font-serif text-xl sm:text-2xl text-charcoal group-hover:text-sage-600 transition">
+                        Spinoza'nın Doğa Felsefesi ve Panteizm
+                    </h3>
+                    <p class="text-sm text-charcoal/75 mt-1.5 font-light">
+                        Deus sive Natura ilkesi üzerine 3 saatlik derinlemesine metin okuması ve duygu geometrisi incelemesi.
+                    </p>
+                </article>
+
+                <article class="p-5 rounded-2xl bg-parchment-card/70 border border-parchment-border hover:bg-parchment-card hover:border-terracotta-500/40 transition group">
+                    <div class="flex items-center gap-2 text-xs text-terracotta-600 font-medium mb-1">
+                        <span>Ağustos 2026</span>
+                        <span>•</span>
+                        <span class="text-charcoal/60">18 Katılımcı</span>
+                    </div>
+                    <h3 class="font-serif text-xl sm:text-2xl text-charcoal group-hover:text-terracotta-600 transition">
+                        Nietzsche: Bengi Dönüş ve Amor Fati
+                    </h3>
+                    <p class="text-sm text-charcoal/75 mt-1.5 font-light">
+                        Yaşamı olduğu gibi sevmek, trajik kahraman ve 'Böyle Buyurdu Zerdüşt' üzerine karşılıklı değerlendirmeler.
+                    </p>
+                </article>
+
+                <article class="p-5 rounded-2xl bg-parchment-card/70 border border-parchment-border hover:bg-parchment-card hover:border-clay-500 transition group">
+                    <div class="flex items-center gap-2 text-xs text-clay-500 font-medium mb-1">
+                        <span>Temmuz 2026</span>
+                        <span>•</span>
+                        <span class="text-charcoal/60">32 Katılımcı</span>
+                    </div>
+                    <h3 class="font-serif text-xl sm:text-2xl text-charcoal group-hover:text-clay-500 transition">
+                        Epiktetos ve Marcus Aurelius ile Stoacı Bir Gün
+                    </h3>
+                    <p class="text-sm text-charcoal/75 mt-1.5 font-light">
+                        Kontrol edebildiklerimiz ve edemediklerimiz ayrımı (Dikotomi) üzerinden modern kaygılara felsefi çözümler.
+                    </p>
+                </article>
+            </div>
+        </section>
+
+        <!-- 4. BLOG / DÜŞÜNCE GÜNLÜĞÜ -->
+        <section id="blog" class="tab-panel">
+            <div class="border-b border-parchment-border pb-4 mb-8">
+                <span class="text-xs uppercase tracking-widest text-terracotta-500 font-semibold px-2.5 py-1 rounded-full bg-terracotta-50 inline-block">Yazılar & Notlar</span>
+                <h2 class="font-serif text-3xl sm:text-4xl text-charcoal font-normal mt-2">LupusLogos Bülteni</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Blog Kartı 1 -->
+                <div class="p-6 rounded-2xl bg-parchment-card border border-parchment-border hover:shadow-md hover:border-terracotta-500/30 transition flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-2 text-xs text-charcoal/50 mb-2">
+                            <span class="px-2 py-0.5 rounded bg-terracotta-100 text-terracotta-600 font-medium">Düşünce Notu</span>
+                            <span>14 Ekim 2026</span>
+                        </div>
+                        <h3 class="font-serif text-2xl text-charcoal mb-2 font-normal">Sessizliğin Epistemolojisi</h3>
+                        <p class="text-sm text-charcoal/75 font-light leading-relaxed mb-4">
+                            Sürekli bir yanıt verme zorunluluğu hissettiğimiz bu iletişim bolluğunda, susmanın ve duraklamanın bilgiye giden ilk adım olduğunu unutuyor muyuz?
+                        </p>
+                    </div>
+                    <div>
+                        <button onclick="showMockModal('Sessizliğin Epistemolojisi')" class="text-xs font-semibold tracking-wider uppercase text-terracotta-500 hover:text-terracotta-600 interactive-btn inline-flex items-center gap-1">
+                            Devamını Oku <span>&rarr;</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Blog Kartı 2 -->
+                <div class="p-6 rounded-2xl bg-parchment-card border border-parchment-border hover:shadow-md hover:border-sage-500/30 transition flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-2 text-xs text-charcoal/50 mb-2">
+                            <span class="px-2 py-0.5 rounded bg-sage-100 text-sage-600 font-medium">İnceleme</span>
+                            <span>02 Ekim 2026</span>
+                        </div>
+                        <h3 class="font-serif text-2xl text-charcoal mb-2 font-normal">Zaman Denen Nehirde Akmak</h3>
+                        <p class="text-sm text-charcoal/75 font-light leading-relaxed mb-4">
+                            Herakleitos’un fragmanlarından Bergson'un süre (durée) kavramına kadar zamanı sadece saatlerle değil, anın derinliğiyle kavramak üzerine bir deneme.
+                        </p>
+                    </div>
+                    <div>
+                        <button onclick="showMockModal('Zaman Denen Nehirde Akmak')" class="text-xs font-semibold tracking-wider uppercase text-sage-600 hover:text-sage-500 interactive-btn inline-flex items-center gap-1">
+                            Devamını Oku <span>&rarr;</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. FOTOĞRAFLAR -->
+        <section id="fotograflar" class="tab-panel">
+            <div class="border-b border-parchment-border pb-4 mb-8">
+                <span class="text-xs uppercase tracking-widest text-sage-600 font-semibold px-2.5 py-1 rounded-full bg-sage-100 inline-block">Galeri</span>
+                <h2 class="font-serif text-3xl sm:text-4xl text-charcoal font-normal mt-2">Buluşmalardan Kareler</h2>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+                <div class="photo-card overflow-hidden rounded-2xl bg-parchment-darker aspect-[4/3] border border-parchment-border shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?auto=format&fit=crop&w=800&q=80" 
+                         alt="Kitap ve Kahve" 
+                         class="w-full h-full object-cover" 
+                         loading="lazy" 
+                         onerror="this.src='https://placehold.co/600x450/e3dcce/5f7a68?text=Kitap+Okuması'">
+                </div>
+
+                <div class="photo-card overflow-hidden rounded-2xl bg-parchment-darker aspect-[4/3] border border-parchment-border shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=800&q=80" 
+                         alt="Toplantı Tartışması" 
+                         class="w-full h-full object-cover" 
+                         loading="lazy" 
+                         onerror="this.src='https://placehold.co/600x450/e3dcce/b86f52?text=Tartışma+Atölyesi'">
+                </div>
+
+                <div class="photo-card overflow-hidden rounded-2xl bg-parchment-darker aspect-[4/3] border border-parchment-border shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&w=800&q=80" 
+                         alt="Klasik Eserler" 
+                         class="w-full h-full object-cover" 
+                         loading="lazy" 
+                         onerror="this.src='https://placehold.co/600x450/e3dcce/8a7b6d?text=Felsefe+Metinleri'">
+                </div>
+
+                <div class="photo-card overflow-hidden rounded-2xl bg-parchment-darker aspect-[4/3] border border-parchment-border shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=800&q=80" 
+                         alt="Kütüphane Buluşması" 
+                         class="w-full h-full object-cover" 
+                         loading="lazy" 
+                         onerror="this.src='https://placehold.co/600x450/e3dcce/5f7a68?text=Kütüphane+Saati'">
+                </div>
+
+                <div class="photo-card overflow-hidden rounded-2xl bg-parchment-darker aspect-[4/3] border border-parchment-border shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=800&q=80" 
+                         alt="Açık Hava Çemberi" 
+                         class="w-full h-full object-cover" 
+                         loading="lazy" 
+                         onerror="this.src='https://placehold.co/600x450/e3dcce/b86f52?text=Açık+Hava+Diyaloğu'">
+                </div>
+
+                <div class="photo-card overflow-hidden rounded-2xl bg-parchment-darker aspect-[4/3] border border-parchment-border shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=800&q=80" 
+                         alt="Not Defteri ve Düşünceler" 
+                         class="w-full h-full object-cover" 
+                         loading="lazy" 
+                         onerror="this.src='https://placehold.co/600x450/e3dcce/8a7b6d?text=Düşünce+Notları'">
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. ÖNERİ VE ELEŞTİRİ GİRİŞİ -->
+        <section id="oneri-elestiri" class="tab-panel">
+            <div class="max-w-xl mx-auto p-8 rounded-3xl bg-parchment-card border border-parchment-border shadow-sm">
+                <div class="text-center pb-6 border-b border-parchment-border mb-6">
+                    <span class="text-xs uppercase tracking-widest text-terracotta-500 font-semibold px-2.5 py-1 rounded-full bg-terracotta-50 inline-block">Agora Kutusu</span>
+                    <h2 class="font-serif text-3xl sm:text-4xl text-charcoal font-normal mt-2">Öneri & Eleştiri</h2>
+                    <p class="text-sm text-charcoal/70 font-light mt-2">
+                        Kulübümüzü birlikte geliştiriyoruz. Tartışılmasını istediğiniz konu başlıklarını, kitapları veya görüşlerinizi paylaşın.
+                    </p>
+                </div>
+
+                <form id="feedbackForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                    <div>
+                        <label for="name" class="block text-xs uppercase tracking-wider text-charcoal/60 mb-1.5 font-medium">İsim (İsteğe Bağlı / Anonim)</label>
+                        <input type="text" id="name" placeholder="Örn: Diyojen veya İsimsiz" 
+                               class="w-full px-4 py-2.5 rounded-xl bg-parchment-base border border-parchment-border text-charcoal placeholder-charcoal/30 focus:outline-none focus:ring-2 focus:ring-sage-500/30 focus:border-sage-500 transition text-sm">
+                    </div>
+
+                    <div>
+                        <label for="category" class="block text-xs uppercase tracking-wider text-charcoal/60 mb-1.5 font-medium">Kategori</label>
+                        <select id="category" class="w-full px-4 py-2.5 rounded-xl bg-parchment-base border border-parchment-border text-charcoal focus:outline-none focus:ring-2 focus:ring-sage-500/30 focus:border-sage-500 transition text-sm">
+                            <option value="konu-onerisi">Konu / Tema Önerisi</option>
+                            <option value="kitap-onerisi">Kitap / Metin Tavsiyesi</option>
+                            <option value="elestiri">Yapıcı Eleştiri & Geliştirme</option>
+                            <option value="diger">Diğer Fikirler</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="message" class="block text-xs uppercase tracking-wider text-charcoal/60 mb-1.5 font-medium">Düşünceniz / Mesajınız *</label>
+                        <textarea id="message" required rows="4" placeholder="Fikrinizi buraya yazabilirsiniz..." 
+                                  class="w-full px-4 py-2.5 rounded-xl bg-parchment-base border border-parchment-border text-charcoal placeholder-charcoal/30 focus:outline-none focus:ring-2 focus:ring-sage-500/30 focus:border-sage-500 transition text-sm resize-none"></textarea>
+                    </div>
+
+                    <div class="pt-2">
+                        <button type="submit" 
+                                class="w-full py-3 px-6 rounded-xl bg-sage-500 text-white hover:bg-sage-600 text-sm font-medium tracking-wide interactive-btn shadow-md hover:shadow-lg transition">
+                            Görüşü İlet
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Başarı Bildirimi (Toast) -->
+    <div id="toast" class="fixed bottom-6 right-6 transform translate-y-20 opacity-0 pointer-events-none bg-charcoal text-parchment-card px-5 py-3 rounded-2xl shadow-xl flex items-center gap-3 z-50 text-sm border border-parchment-border">
+        <span class="w-6 h-6 rounded-full bg-sage-500/30 text-sage-400 flex items-center justify-center shrink-0">
+            ✓
+        </span>
+        <span id="toast-message">Düşünceniz kaydedildi, teşekkür ederiz.</span>
+    </div>
+
+    <!-- Blog Önizleme Modalı -->
+    <div id="mockModal" class="fixed inset-0 bg-charcoal/50 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-parchment-card max-w-lg w-full rounded-3xl p-6 sm:p-8 border border-parchment-border shadow-2xl space-y-4">
+            <div class="flex justify-between items-start">
+                <h3 id="modalTitle" class="font-serif text-2xl text-charcoal font-medium"></h3>
+                <button onclick="closeModal()" class="text-charcoal/50 hover:text-charcoal p-1 interactive-btn rounded-full hover:bg-parchment-base">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <p class="text-sm text-charcoal/80 font-light leading-relaxed">
+                Bu yazı LupusLogos arşivinde yer almaktadır. Bir sonraki açık oturumumuzda bu metin üzerine kapsamlı bir tahlil yapılacaktır. Katılmak ve tartışmaya ortak olmak için etkinlik takvimini takip edebilirsiniz.
+            </p>
+            <div class="pt-2 flex justify-end">
+                <button onclick="closeModal()" class="px-5 py-2 rounded-xl bg-parchment-darker hover:bg-terracotta-100 hover:text-terracotta-600 text-xs font-semibold text-charcoal interactive-btn border border-parchment-border">
+                    Kapat
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="border-t border-parchment-border py-8 mt-12 bg-parchment-card/70">
+        <div class="max-w-4xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between text-xs text-charcoal/60 gap-4">
+            <div>
+                © 2026 LupusLogos Felsefe Kulübü — Akıl, Merak ve Erdem.
+            </div>
+            <div class="flex gap-4">
+                <span class="hover:text-charcoal cursor-pointer transition" onclick="switchTab('biz-kimiz')">Giriş</span>
+                <span class="hover:text-charcoal cursor-pointer transition" onclick="switchTab('program')">Takvim</span>
+                <span class="hover:text-charcoal cursor-pointer transition" onclick="switchTab('oneri-elestiri')">İletişim</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Aktif sekmeyi yöneten ve yumuşak animasyon sağlayan fonksiyon
+        function switchTab(tabId) {
+            const panels = document.querySelectorAll('.tab-panel');
+            const buttons = document.querySelectorAll('.nav-btn');
+
+            // Tüm panelleri gizle
+            panels.forEach(panel => {
+                panel.classList.remove('active');
+            });
+
+            // Buton aktiflik stillerini sıfırla
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-charcoal', 'text-parchment-card', 'shadow-sm', 'border-charcoal');
+                btn.classList.add('text-charcoal/80', 'border-transparent');
+            });
+
+            // Hedef paneli göster
+            const targetPanel = document.getElementById(tabId);
+            if (targetPanel) {
+                targetPanel.classList.add('active');
+            }
+
+            // Aktif butonu vurgula (pastel uyumlu şık koyu zemin)
+            const activeBtn = document.getElementById('btn-' + tabId);
+            if (activeBtn) {
+                activeBtn.classList.remove('text-charcoal/80', 'border-transparent');
+                activeBtn.classList.add('bg-charcoal', 'text-parchment-card', 'shadow-sm');
+            }
+
+            // Sayfayı hafifçe içeriğe kaydır
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Öneri & Eleştiri Form İşleme
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const messageInput = document.getElementById('message');
+            
+            if (!messageInput.value.trim()) return;
+
+            // Formu temizle
+            document.getElementById('feedbackForm').reset();
+
+            // Toast bildirimini göster
+            showToast("Öneriniz ve kıymetli düşünceniz kaydedildi!");
+        }
+
+        // Sade Toast Bildirimi Gösterici
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            
+            toastMsg.textContent = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+            }, 3000);
+        }
+
+        // Blog Modal Fonksiyonları
+        function showMockModal(title) {
+            document.getElementById('modalTitle').textContent = title;
+            const modal = document.getElementById('mockModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('mockModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Sayfa yüklendiğinde varsayılan sekmeyi ayarla
+        document.addEventListener('DOMContentLoaded', () => {
+            switchTab('biz-kimiz');
+        });
+    </script>
+</body>
+</html>
